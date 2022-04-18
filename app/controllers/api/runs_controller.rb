@@ -15,7 +15,6 @@ class Api::RunsController < Api::BaseController
   end
 
   def create
-    puts params[:_json]
     @run = Run.new(run_params)
 
     authorize @run
@@ -34,6 +33,7 @@ class Api::RunsController < Api::BaseController
 
   def show
     set_run
+    authorize @run
     respond_to do |format|
       format.json { render json: @run }
     end
@@ -42,6 +42,7 @@ class Api::RunsController < Api::BaseController
   def update
     set_run
     authorize @run
+
     respond_to do |format|
       if @run.update(run_params)
         format.json { render json: @run }
@@ -54,7 +55,7 @@ class Api::RunsController < Api::BaseController
   def destroy
     id = params[:id]
 
-    res = Run.where("id = #{id}").delete_all
+    res = Run.where("id = #{id} AND user_id = #{current_user.id}").delete_all
 
     respond_to do |format|
       if res > 0
@@ -94,8 +95,7 @@ class Api::RunsController < Api::BaseController
 
   # Use callbacks to share common setup or constraints between actions.
   def set_run
-    @run = Run.find(params[:id])
-    authorize @run
+    @run = policy_scope(Run).find(params[:id])
   end
 
   # Only allow a list of trusted parameters through.

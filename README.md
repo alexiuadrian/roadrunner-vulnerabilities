@@ -54,3 +54,24 @@ Response example:
     }
 ]
 ```
+
+### POST /api/runs
+
+Request body example:
+
+```json
+{
+    "date": "06.11.2022",
+    "distance": 7.2,
+    "time": "1 30",
+    "user_id": 2
+}
+```
+
+Response example:
+
+```json
+{
+    "OK": true
+}
+```
